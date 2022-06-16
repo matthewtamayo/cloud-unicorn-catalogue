@@ -31,4 +31,10 @@ export class CatalogueController {
     const categories = await this.catalogueService.getCategories();
     return categories;
   }
+
+  @Get('/search/:text')
+  async searchText(@Param('text') productText: string) {
+    const result = await this.catalogueService.searchText(productText);
+    return result;
+  }
 }

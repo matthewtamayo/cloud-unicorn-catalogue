@@ -66,4 +66,18 @@ export class CatalogueService {
     }
     return cat;
   }
+
+  // search name and description
+  async searchText(text: string) {
+    let result;
+    try {
+      result = await this.productModel.find({ $text: { $search: text } });
+      if (!result) {
+        throw new NotFoundException('not found');
+      }
+    } catch (error) {
+      throw new NotFoundException('500 ERROR');
+    }
+    return result;
+  }
 }
