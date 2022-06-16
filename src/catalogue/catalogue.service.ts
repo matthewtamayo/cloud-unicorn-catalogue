@@ -57,17 +57,13 @@ export class CatalogueService {
   async getCategories() {
     let cat;
     try {
-      cat = await this.productModel.find().exec();
-      let result = cat.map((res) => res.categories).flat();
-      var filteredArray = result.filter(function (item, pos) {
-        return result.indexOf(item) == pos;
-      });
-      if (!filteredArray) {
+      cat = await this.productModel.distinct('categories');
+      if (!cat) {
         throw new NotFoundException('categories not found');
       }
-      return filteredArray;
     } catch (error) {
       throw new NotFoundException('500 error');
     }
+    return cat;
   }
 }
