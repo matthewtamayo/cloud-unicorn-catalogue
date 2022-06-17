@@ -1,0 +1,27 @@
+steps:
+
+  #Build docker image
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'build', '-t', '${_IMAGE_NAME}', '.' ]
+
+  #Push image to Artifact Registry
+  - name: 'gcr.io/cloud-builders/docker'
+    args: [ 'push', '${_IMAGE_NAME}' ]
+
+  #Release to GKE
+  - name: 'gcr.io/google.com/cloudsdktool/cloud-sdk'
+    entrypoint: 'gcloud'
+    args: [ 'deploy',
+            'releases',
+            'create',
+            '${_RELEASE_NAME}',
+            "--region=us-central1",
+            "--delivery-pipeline=unicorn-shipping-pipeline",
+            "--images=unicorn-shipping=${_IMAGE_NAME}"
+          ]
+substitutions:
+    _IMAGE_NAME: 'us-central1-docker.pkg.dev/off-net-dev/unicorn-shipping-repo/unicorn-shipping-image:${SHORT_SHA}'
+    _RELEASE_NAME: 'unicorn-shipping-release-${SHORT_SHA}'
+options:
+    dynamic_substitutions: true
+    substitution_option: 'ALLOW_LOOSE'
