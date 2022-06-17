@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: Pod
+metadata:
+  name: unicorn-shipping-app
+spec:
+  containers:
+  - name: unicorn-shipping
+    image: unicorn-shipping
